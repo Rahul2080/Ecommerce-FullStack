@@ -1,4 +1,4 @@
-import 'package:ecommerceapp2/Login_page.dart';
+import 'package:ecommerceapp2/Login.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +19,7 @@ class _OnboardState extends State<Onboard> {
   Widget build(BuildContext context) {
     void _onIntroEnd(context) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => LoginPage()),
+        MaterialPageRoute(builder: (_) => Login()),
       );
     }
 
@@ -65,7 +65,7 @@ class _OnboardState extends State<Onboard> {
                 ),
               ),
             ),
-            image: Image.asset('assets/onboardimg1.png'),
+            image: Image.asset('assets/Onboardimages/onboardimg1.png'),
           ),
           PageViewModel(
             titleWidget: Text(
@@ -93,7 +93,7 @@ class _OnboardState extends State<Onboard> {
                 ),
               ),
             ),
-            image: Image.asset('assets/onboardimg2.png'),
+            image: Image.asset('assets/Onboardimages/onboardimg2.png'),
           ),
           PageViewModel(
             titleWidget: Text(
@@ -121,7 +121,7 @@ class _OnboardState extends State<Onboard> {
                 ),
               ),
             ),
-            image: Image.asset('assets/onboardimg3.png'),
+            image: Image.asset('assets/Onboardimages/onboardimg3.png'),
           ),
         ],
         onDone: () => _onIntroEnd(context),

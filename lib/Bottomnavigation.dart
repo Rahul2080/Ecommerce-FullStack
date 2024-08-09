@@ -1,9 +1,12 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:ecommerceapp2/Cart.dart';
+import 'package:ecommerceapp2/Profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'Favourite.dart';
 import 'Home.dart';
 import 'Search.dart';
-import 'Settings.dart';
 
 class Bottomnavigation extends StatefulWidget {
   const Bottomnavigation({super.key});
@@ -13,37 +16,33 @@ class Bottomnavigation extends StatefulWidget {
 }
 
 class _BottomnavigationState extends State<Bottomnavigation> {
-  final navigation = [Home(), Favourite(), Search(), Settings()];
+  final navigation = [Home(), Favourite(),Cart(), Search(), Profile()];
   int currentindex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(showSelectedLabels: false,
-        backgroundColor: Colors.yellow,
+      bottomNavigationBar: CurvedNavigationBar(
+        color: Colors.white,
+        animationCurve: Curves.easeInOut,
+        backgroundColor: Colors.white,
+        height: 50.h,
+        animationDuration: Duration(milliseconds: 500 ),
         onTap: (index) {
           setState(() {
             currentindex = index;
           });
         },
         items: [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: currentindex == 0 ? Color(0xFFF6C354) : Colors.black,
-              ),
-              label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border,
-                  color: currentindex == 1 ? Color(0xFFF6C354) : Colors.black),
-              label: "notification"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search,
-                  color: currentindex == 2 ? Color(0xFFF6C354) : Colors.black),
-              label: "cart"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings,
-                  color: currentindex == 3 ? Color(0xFFF6C354) : Colors.black),
-              label: "account"),
+          Icon(Icons.home,
+              color: currentindex == 0 ? Colors.black: Colors.black),
+          Icon(Icons.favorite_border,
+              color: currentindex == 1 ? Colors.red : Colors.black),
+          Icon(Icons.shopping_cart_outlined,
+              color: currentindex == 0 ? Colors.black: Colors.black),
+          Icon(Icons.search,
+              color: currentindex == 2 ? Colors.black :Colors.black),
+          Icon(Icons.person_outlined,
+              color: currentindex == 3 ? Colors.black : Colors.black),
 
         ],
       ),

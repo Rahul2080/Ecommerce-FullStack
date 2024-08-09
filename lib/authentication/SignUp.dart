@@ -1,10 +1,11 @@
 import 'package:ecommerceapp2/Bottomnavigation.dart';
-import 'package:ecommerceapp2/Login.dart';
+import 'package:ecommerceapp2/authentication/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'Home.dart';
+import '../Home.dart';
+import 'Phone.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -24,7 +25,7 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(automaticallyImplyLeading: false,),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,18 +230,20 @@ class _SignupState extends State<Signup> {
                           ),child: Image.asset("assets/google.png"),
                         ),
                         SizedBox(width: 14.w),
-                        Container(
-                          width: 54.w,
-                          height: 54.h,
+                        GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=> Phone()));},
+                          child: Container(
+                            width: 54.w,
+                            height: 54.h,
 
-                          clipBehavior: Clip.antiAlias,
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFFBF3F5),
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(width: 1.w, color: Color(0xFFF73658)),
-                              borderRadius: BorderRadius.circular(50.r),
-                            ),
-                          ),child:Icon(Icons.phone,size: 30.sp,),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: Color(0xFFFBF3F5),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(width: 1.w, color: Color(0xFFF73658)),
+                                borderRadius: BorderRadius.circular(50.r),
+                              ),
+                            ),child:Icon(Icons.phone,size: 30.sp,),
+                          ),
                         ),
 
                       ],

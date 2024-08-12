@@ -288,6 +288,88 @@ class _PurchaseState extends State<Purchase> {
             padding: EdgeInsets.only(left: 15.w, right: 15.w, top: 20.h),
             child: Divider(),
           ),
+
+          Padding(
+            padding:  EdgeInsets.only(left: 10.w,top: 20.h),
+            child: Row(
+              children: [
+                Text(
+                  'Order Total',
+                  style:GoogleFonts.montserrat(
+                    textStyle:  TextStyle(
+                    color: Colors.black,
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.70.w,
+                  ),
+                ),),
+                SizedBox(width: 170.w,),
+                Text(
+                  '7,000.00',
+                  textAlign: TextAlign.right,
+                  style:GoogleFonts.montserrat(
+                    textStyle:  TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),),
+                ),
+
+              ],
+            ),
+          ),
+          Padding(
+            padding:  EdgeInsets.only(left: 10.w,top: 20.h),
+            child: Row(
+              children: [
+                Text(
+                  'EMI  Available ',
+                  style:GoogleFonts.montserrat(
+                    textStyle:  TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: -0.70.w,
+                  ),),
+                ),
+                SizedBox(width: 10.w),
+                Text(
+                  'Details',
+                  textAlign: TextAlign.right,
+                  style:GoogleFonts.montserrat(
+                    textStyle:  TextStyle(
+                    color: Color(0xFFF73658),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),),
+              ],
+            ),
+          ),
+          SizedBox(height: 80.h),
+          Center(
+            child: Container(
+              width: 219.w,
+              height: 48.h,
+              decoration: ShapeDecoration(
+                color: Color(0xFFF73658),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
+              ),child: Center(
+                child: Text(
+                'Proceed to Payment',
+                textAlign: TextAlign.center,
+                style:GoogleFonts.montserrat(
+                  textStyle:  TextStyle(
+                  color: Colors.white,
+                  fontSize: 17.sp,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: -0.41.w,
+                ),
+                            ), ),
+              ),
+            ),
+          )
         ],
       ),
     );

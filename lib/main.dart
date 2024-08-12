@@ -1,4 +1,4 @@
-import 'package:ecommerceapp2/Splash.dart';
+import 'package:ecommerceapp2/OnBoard_page/Splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

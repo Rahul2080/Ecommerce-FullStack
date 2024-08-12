@@ -1,10 +1,11 @@
 import 'package:ecommerceapp2/Bottomnavigation.dart';
 import 'package:ecommerceapp2/authentication/Login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../Home.dart';
+import '../Home/Home.dart';
 import 'Phone.dart';
 
 class Signup extends StatefulWidget {
@@ -18,7 +19,7 @@ class _SignupState extends State<Signup> {
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontroller = TextEditingController();
   TextEditingController confirmpasswordcontroller = TextEditingController();
-
+TextEditingController namecontroller=TextEditingController();
   bool passwordvisible = true;
   bool confirmpasswordvisible = true;
 
@@ -48,8 +49,29 @@ class _SignupState extends State<Signup> {
               ),
             ),
             SizedBox(
-              height: 70.h,
+              height: 40.h,
             ),
+
+            Center(
+              child: Container(
+                width: 317.w,
+                height: 55.h,
+                decoration: ShapeDecoration(
+                    color: Color(0xFFF3F3F3),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r))),
+                child: TextField(
+                  controller: namecontroller,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Your Name',
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                ),
+              ),
+            ),  SizedBox(height: 20.h),
             Center(
               child: Container(
                 width: 317.w,
@@ -172,7 +194,7 @@ class _SignupState extends State<Signup> {
                 ),
               ),
             ),
-            SizedBox(height: 50.h),
+            SizedBox(height: 25.h),
             Center(
               child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Bottomnavigation()));},
                 child: Container(

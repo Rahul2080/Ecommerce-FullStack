@@ -1,5 +1,5 @@
-import 'package:ecommerceapp2/Onboard.dart';
-import 'package:ecommerceapp2/Startindro.dart';
+import 'package:ecommerceapp2/OnBoard_page/Onboard.dart';
+import 'package:ecommerceapp2/OnBoard_page/Startindro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,5 +1,5 @@
 import 'package:ecommerceapp2/authentication/ForgetPassword.dart';
-import 'package:ecommerceapp2/Home.dart';
+import 'package:ecommerceapp2/Home/Home.dart';
 import 'package:ecommerceapp2/authentication/Phone.dart';
 import 'package:ecommerceapp2/authentication/SignUp.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ class Login extends StatefulWidget {
 }
 TextEditingController emailcontroller=TextEditingController();
 TextEditingController passwordcontroller=TextEditingController();
+TextEditingController namecontroller=TextEditingController();
 
 bool passwordvisible=true;
 class _LoginState extends State<Login> {
@@ -45,8 +46,28 @@ class _LoginState extends State<Login> {
               ),
             ),
             SizedBox(
-              height: 100.h,
+              height: 70.h,
             ),
+            Center(
+              child: Container(
+                width: 317.w,
+                height: 55.h,
+                decoration: ShapeDecoration(
+                    color: Color(0xFFF3F3F3),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r))),
+                child: TextField(
+                  controller: namecontroller,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Your Name',
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                ),
+              ),
+            ),  SizedBox(height: 20.h),
             Center(
               child: Container(
                 width: 317.w,
@@ -111,7 +132,7 @@ class _LoginState extends State<Login> {
               ),
             ),
             SizedBox(
-              height: 60.h,
+              height: 50.h,
             ),
             Center(
               child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Bottomnavigation()));},
@@ -138,7 +159,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            SizedBox(height: 40.h),
+            SizedBox(height: 30.h),
             Center(
               child: Container(width: 194.w,height: 160.h,
                 child: Column(
@@ -154,7 +175,7 @@ class _LoginState extends State<Login> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),),
-                SizedBox(height: 30.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     SizedBox(width: 35.w),
@@ -190,7 +211,7 @@ class _LoginState extends State<Login> {
 
                   ],
                 ),
-                    SizedBox(height: 30.h),
+                    SizedBox(height: 20.h),
 
                     Row(
                       children: [

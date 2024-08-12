@@ -1,11 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:ecommerceapp2/Cart.dart';
-import 'package:ecommerceapp2/Profile.dart';
+import 'package:ecommerceapp2/Profile_pages/Profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'Favourite.dart';
-import 'Home.dart';
+import 'Home/Home.dart';
 import 'Search.dart';
 
 class Bottomnavigation extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ecommerceapp2/Purchase.dart';
+import 'package:ecommerceapp2/Home/Purchase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -186,7 +186,7 @@ class _ProductdetailsState extends State<Productdetails> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 10.w, top: 10.h),
+            padding: EdgeInsets.only(left: 10.w, top: 20.h),
             child: SizedBox(
               width: 126.w,
               child: Text(
@@ -202,7 +202,7 @@ class _ProductdetailsState extends State<Productdetails> {
             ),
           ),
           Padding(
-            padding:  EdgeInsets.only(left: 10.w,right: 10.w),
+            padding:  EdgeInsets.only(left: 10.w,right: 10.w,top: 5.h),
             child: ReadMoreText(
               'Perhaps the most iconic sneaker of all-time, this original "Chicago"? colorway is the cornerstone to any sneaker collection. Made famous in 1985 by Michael Jordan, the shoe has stood the test of time, becoming the most famous colorway of the Air Jordan 1. This 2015 release saw the',
               trimMode: TrimMode.Line,
@@ -215,7 +215,7 @@ class _ProductdetailsState extends State<Productdetails> {
           ),
 
 
-SizedBox(height: 20.h),
+SizedBox(height: 70.h),
 
           Center(
             child: Row(mainAxisAlignment: MainAxisAlignment.center,

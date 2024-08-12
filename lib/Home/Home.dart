@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ecommerceapp2/Profile.dart';
-import 'package:ecommerceapp2/Productdetails.dart';
+import 'package:ecommerceapp2/Profile_pages/Profile.dart';
+import 'package:ecommerceapp2/Home/Productdetails.dart';
+import 'package:ecommerceapp2/Search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,42 +60,44 @@ class _HomeState extends State<Home> {
           children: [
             SizedBox(height: 10.h),
             Center(
-              child: Container(
-                width: 343.w,
-                height: 40.h,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r)),
-                  shadows: [
-                    BoxShadow(
-                      color: Color(0x0A000000),
-                      blurRadius: 10.r,
-                      offset: Offset(2.w, 2.h),
-                      spreadRadius: 10.r,
-                    )
-                  ],
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search any Product..',
-                      hintStyle: GoogleFonts.montserrat(
-                        textStyle: TextStyle(
-                          color: Color(0xFFBBBBBB),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          height: 0.10.h,
+              child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Search()));},
+                child: Container(
+                  width: 343.w,
+                  height: 40.h,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.r)),
+                    shadows: [
+                      BoxShadow(
+                        color: Color(0x0A000000),
+                        blurRadius: 10.r,
+                        offset: Offset(2.w, 2.h),
+                        spreadRadius: 10.r,
+                      ),
+                    ],
+                  ),child: Row(
+                    children: [
+                      SizedBox(width: 5.w),
+                      Icon(Icons.search,color: Colors.grey,),SizedBox(width: 10.w),
+                      Text(
+                        'Search any Product..',
+                        style: GoogleFonts.montserrat(
+                          textStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w400,
+                            height: 0.07.h,
+                          ),
                         ),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                      ),
-                      suffixIcon: Icon(
-                        Icons.mic,
-                        color: Colors.grey,
-                      )),
+                      ),SizedBox(width: 100.w),
+                    Icon(
+                      Icons.mic,
+                      color: Colors.grey,
+                    ),
+
+                    ],
+                  ),
                 ),
               ),
             ),

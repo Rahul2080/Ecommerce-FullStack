@@ -1,5 +1,7 @@
+import 'package:double_back_to_exit/double_back_to_exit.dart';
 import 'package:ecommerceapp2/Profile_pages/AboutUs.dart';
 import 'package:ecommerceapp2/Profile_pages/Myorder.dart';
+import 'package:ecommerceapp2/authentication/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,8 +33,8 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     ),
-body: Column(crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
+    body: Column(crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
     Center(
       child: Stack(
         children: [
@@ -180,43 +182,45 @@ body: Column(crossAxisAlignment: CrossAxisAlignment.start,
 
     SizedBox(height: 40.h),
     Center(
-      child: Container(
-        width: 340.w,
-        height: 50.h,
-        decoration: ShapeDecoration(
-          color: Color(0xFFC6D6D3),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6.r)),
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding:  EdgeInsets.only(left: 20.w),
-              child: Container(height: 50.h,width: 100.w,
-                child: Center(
-                  child: Text(
-                    'Logout ',
-                    style: GoogleFonts.plusJakartaSans(
-                      textStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w500,
+      child: GestureDetector(onTap: (){Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_)=>Login()), (route)=>(false));},
+        child: Container(
+          width: 340.w,
+          height: 50.h,
+          decoration: ShapeDecoration(
+            color: Color(0xFFC6D6D3),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6.r)),
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding:  EdgeInsets.only(left: 20.w),
+                child: Container(height: 50.h,width: 100.w,
+                  child: Center(
+                    child: Text(
+                      'Logout ',
+                      style: GoogleFonts.plusJakartaSans(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(width: 170.w),
-            Container(width: 50.w,height: 50.h,
-                child: Icon(Icons.double_arrow))
-          ],
+              SizedBox(width: 170.w),
+              Container(width: 50.w,height: 50.h,
+                  child: Icon(Icons.double_arrow))
+            ],
+          ),
         ),
       ),
     ),
 
-  ],
-),
+      ],
+    ),
     );
   }
 }

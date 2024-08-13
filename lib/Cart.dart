@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:double_back_to_exit/double_back_to_exit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,26 +18,41 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(),
-      body:   SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: ListView.separated(
-        itemCount: 4,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, position) {
-          return Padding(
-            padding: EdgeInsets.only(left: 10.w, right: 10.w),
-            child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=> Productdetails()));},
-              child: Container(
-                width: 170.w,
-                height: 130.h,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r)),
-                ),
+    return Scaffold(
+      appBar: AppBar(),
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: ListView.separated(
+          itemCount: 4,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, position) {
+            return Padding(
+              padding: EdgeInsets.only(left: 10.w, right: 10.w),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => Productdetails(
+                          image: 'snapshot.data!.docs[position]["imgUrl"].toString()',
+                          productname: 'snapshot.data!.docs[position]["productName"].toString()',
+                          ratting: 'snapshot.data!.docs[position]["ratting"].toString()',
+                          offer: 'snapshot.data!.docs[position]["offer"].toString()',
+                          offerprice: 'snapshot.data!.docs[position]["offerprice"]'
+                              .toString(),
+                          price:
+                              'snapshot.data!.docs[position]["price"].toString()',
+                          about: 'snapshot.data!.docs[position]["about"].toString()'),
+                  ));
+                },
                 child: Container(
+                  width: 170.w,
+                  height: 130.h,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.r)),
+                  ),
+                  child: Container(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -48,12 +66,13 @@ class _CartState extends State<Cart> {
                                 fit: BoxFit.cover,
                               )),
                         ),
-
-                        Column(crossAxisAlignment: CrossAxisAlignment.start,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(left: 5.w,top: 5.h),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                              padding: EdgeInsets.only(left: 5.w, top: 5.h),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
                                     width: 162.w,
@@ -68,7 +87,8 @@ class _CartState extends State<Cart> {
                                         ),
                                       ),
                                     ),
-                                  ),  Icon(Icons.clear),
+                                  ),
+                                  Icon(Icons.clear),
                                 ],
                               ),
                             ),
@@ -108,7 +128,7 @@ class _CartState extends State<Cart> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 5.w,top: 5.h),
+                              padding: EdgeInsets.only(left: 5.w, top: 5.h),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -118,7 +138,8 @@ class _CartState extends State<Cart> {
                                       '₹2499',
                                       style: GoogleFonts.montserrat(
                                         textStyle: TextStyle(
-                                          decoration: TextDecoration.lineThrough,
+                                          decoration:
+                                              TextDecoration.lineThrough,
                                           color: Color(0xFFBBBBBB),
                                           fontSize: 12.sp,
                                           fontWeight: FontWeight.w300,
@@ -154,7 +175,7 @@ class _CartState extends State<Cart> {
                                   ignoreGestures: true,
                                   itemCount: 5,
                                   itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 1.w),
+                                      EdgeInsets.symmetric(horizontal: 1.w),
                                   itemBuilder: (context, _) => Icon(
                                     Icons.star,
                                     color: Colors.amber,
@@ -179,21 +200,20 @@ class _CartState extends State<Cart> {
                                 )
                               ],
                             ),
-
                           ],
                         ),
-
-
                       ],
-                    ),),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          );
-        },
-        separatorBuilder: (context, position) {
-          return SizedBox(height: 10.w);
-        },
+            );
+          },
+          separatorBuilder: (context, position) {
+            return SizedBox(height: 10.w);
+          },
+        ),
       ),
-    ),);
+    );
   }
 }

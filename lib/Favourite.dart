@@ -1,3 +1,4 @@
+import 'package:double_back_to_exit/double_back_to_exit.dart';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

@@ -1,4 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:double_back_to_exit/double_back_to_exit.dart';
 import 'package:ecommerceapp2/Profile_pages/Profile.dart';
 import 'package:ecommerceapp2/Home/Productdetails.dart';
 import 'package:ecommerceapp2/Search.dart';
@@ -17,6 +19,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currrentindex = 0;
+  final firestore =
+  FirebaseFirestore.instance.collection("Category").snapshots();
+  final AdsSlider =
+  FirebaseFirestore.instance.collection("AdsSlider").snapshots();
+  final dealoftheday =
+  FirebaseFirestore.instance.collection("DealsOfTheDay").snapshots();
+  final specialOffer =
+  FirebaseFirestore.instance.collection("SpecialOffer").snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +70,11 @@ class _HomeState extends State<Home> {
           children: [
             SizedBox(height: 10.h),
             Center(
-              child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Search()));},
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => Search()));
+                },
                 child: Container(
                   width: 343.w,
                   height: 40.h,
@@ -76,10 +90,15 @@ class _HomeState extends State<Home> {
                         spreadRadius: 10.r,
                       ),
                     ],
-                  ),child: Row(
+                  ),
+                  child: Row(
                     children: [
                       SizedBox(width: 5.w),
-                      Icon(Icons.search,color: Colors.grey,),SizedBox(width: 10.w),
+                      Icon(
+                        Icons.search,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(width: 10.w),
                       Text(
                         'Search any Product..',
                         style: GoogleFonts.montserrat(
@@ -90,12 +109,12 @@ class _HomeState extends State<Home> {
                             height: 0.07.h,
                           ),
                         ),
-                      ),SizedBox(width: 100.w),
-                    Icon(
-                      Icons.mic,
-                      color: Colors.grey,
-                    ),
-
+                      ),
+                      SizedBox(width: 100.w),
+                      Icon(
+                        Icons.mic,
+                        color: Colors.grey,
+                      ),
                     ],
                   ),
                 ),
@@ -202,78 +221,126 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 100.h,
               width: double.infinity,
-              child: ListView.separated(
-                itemCount: 10,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, position) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.w),
-                        child: CircleAvatar(
-                          radius: 36.r,
-                          backgroundColor: Colors.blue,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      SizedBox(
-                        width: 56.w,
-                        height: 11.h,
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: firestore,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
                         child: Text(
-                          'Fashion',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                              color: Color(0xFF21003D),
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w400,
-                              height: 0.16.h,
-                            ),
-                          ),
+                          "ERROR",
+                          style: TextStyle(color: Colors.red),
                         ),
-                      ),
-                    ],
-                  );
-                },
-                separatorBuilder: (context, position) {
-                  return SizedBox(
-                    width: 5.w,
-                  );
-                },
-              ),
-            ),
-            CarouselSlider.builder(
-              itemCount: 4,
-              itemBuilder:
-                  (BuildContext context, int itemIndex, int pageViewIndex) =>
-                      Container(
-                width: 343.w,
-                height: 189.h,
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Image.asset(
-                    "assets/sliderimg.png",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              options: CarouselOptions(
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  viewportFraction: 1,
-                  initialPage: 2,
-                  height: 200.h,
-                  onPageChanged: (index, r) {
-                    setState(() {
-                      currrentindex = index;
-                    });
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      return ListView.separated(
+                        itemCount: snapshot.data!.docs.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, position) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.w),
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(snapshot
+                                      .data!.docs[position]["imgUrl"]
+                                      .toString()),
+                                  radius: 36.r,
+                                  backgroundColor: Colors.blue,
+                                ),
+                              ),
+                              SizedBox(height: 12.h),
+                              SizedBox(
+                                width: 56.w,
+                                height: 11.h,
+                                child: Text(
+                                  snapshot.data!.docs[position]["CategoryName"]
+                                      .toString(),
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: TextStyle(
+                                      color: Color(0xFF21003D),
+                                      fontSize: 10.sp,
+                                      fontWeight: FontWeight.w400,
+                                      height: 0.16.h,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                        separatorBuilder: (context, position) {
+                          return SizedBox(
+                            width: 5.w,
+                          );
+                        },
+                      );
+                    } else {
+                      return SizedBox();
+                    }
                   }),
             ),
+            StreamBuilder<QuerySnapshot>(
+                stream: AdsSlider,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "ERROR",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    return CarouselSlider.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (BuildContext context, int index,
+                          int pageViewIndex) =>
+                          Container(
+                            width: 343.w,
+                            height: 189.h,
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.r),
+                              child: Image.network(
+                                snapshot.data!.docs[index]["imgUrl"].toString(),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                      options: CarouselOptions(
+                          autoPlay: true,
+                          enlargeCenterPage: true,
+                          viewportFraction: 1,
+                          initialPage: 2,
+                          height: 200.h,
+                          onPageChanged: (index, r) {
+                            setState(() {
+                              currrentindex = index;
+                            });
+                          }),
+                    );
+                  } else {
+                    return SizedBox();
+                  }
+                }),
             SizedBox(height: 10.h),
             AnimatedSmoothIndicator(
               activeIndex: currrentindex,
@@ -370,176 +437,251 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            SizedBox(height: 10.h),
-            SizedBox(
-              width: double.infinity,
-              height: 241.h,
-              child: ListView.separated(
-                itemCount: 4,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, position) {
-                  return Padding(
-                    padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                    child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=> Productdetails()));},
-                      child: Container(
-                        width: 170.w,
-                        height: 241.h,
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.r)),
-                        ),
-                        child: Container(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 170.w,
-                              height: 124.h,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6.r),
-                                  child: Image.asset(
-                                    "assets/startintroimg.png",
-                                    fit: BoxFit.cover,
-                                  )),
-                            ),
-                            SizedBox(height: 10.h),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w),
-                              child: SizedBox(
-                                width: 162.w,
-                                child: Text(
-                                  'Women Printed Kurta',
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
-                                      height: 0.11.h,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w),
-                              child: SizedBox(
-                                width: 162.w,
-                                child: Text(
-                                  'Neque porro quisquam est qui dolorem ipsum quia',
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 5.h),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w),
-                              child: SizedBox(
-                                width: 66.w,
-                                height: 15.h,
-                                child: Text(
-                                  '₹1500',
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w,top: 5.h),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 49.w,
-                                    height: 16.h,
-                                    child: Text(
-                                      '₹2499',
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          decoration: TextDecoration.lineThrough,
-                                          color: Color(0xFFBBBBBB),
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 49.w,
-                                    height: 16.h,
-                                    child: Text(
-                                      '40%Off',
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          color: Color(0xFFFE735C),
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                RatingBar.builder(
-                                  itemSize: 18.sp,
-                                  initialRating: 3,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  ignoreGestures: true,
-                                  itemCount: 5,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 1.w),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                  onRatingUpdate: (rating) {
-                                    print(rating);
-                                  },
-                                ),
-                                SizedBox(
-                                  width: 39.w,
-                                  height: 14.h,
-                                  child: Text(
-                                    '56890',
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: TextStyle(
-                                        color: Color(0xFFA4A9B3),
-                                        fontSize: 10.sp,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        )),
-                      ),
+            SizedBox(height: 20.h),
+            StreamBuilder<QuerySnapshot>(
+              stream: dealoftheday,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      "ERROR",
+                      style: TextStyle(color: Colors.red),
                     ),
                   );
-                },
-                separatorBuilder: (context, position) {
-                  return SizedBox(width: 5.w);
-                },
-              ),
+                }
+                if (snapshot.hasData) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 241.h,
+                    child: ListView.separated(
+                      itemCount: snapshot.data!.docs.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, position) {
+                        return Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) =>
+                                      Productdetails(image:snapshot
+                                          .data!
+                                          .docs[position]["imgUrl"]
+                                          .toString(),
+                                        productname: snapshot
+                                            .data!
+                                            .docs[position]["productName"]
+                                            .toString() ,
+                                        ratting: snapshot.data!
+                                            .docs[position]["ratting"]
+                                            .toString(),
+                                        offer:snapshot.data!
+                                            .docs[position]["offer"]
+                                            .toString() ,
+                                        offerprice:snapshot.data!
+                                            .docs[position]["offerprice"]
+                                            .toString() ,
+                                        price:snapshot.data!
+                                            .docs[position]['price']
+                                            .toString() ,
+                                        about: snapshot.data!
+                                            .docs[position]["about"]
+                                            .toString() ,),),);
+                            },
+                            child: Container(
+                              width: 170.w,
+                              height: 241.h,
+                              decoration: ShapeDecoration(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.r)),
+                              ),
+                              child: Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      SizedBox(
+                                        width: 170.w,
+                                        height: 124.h,
+                                        child: ClipRRect(
+                                            borderRadius:
+                                            BorderRadius.circular(6.r),
+                                            child: Image.network(
+                                              snapshot
+                                                  .data!
+                                                  .docs[position]["imgUrl"]
+                                                  .toString(),
+                                              fit: BoxFit.cover,
+                                            )),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.w),
+                                        child: SizedBox(
+                                          width: 162.w,
+                                          child: Text(
+                                            snapshot
+                                                .data!
+                                                .docs[position]["productName"]
+                                                .toString(),
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                                height: 0.11.h,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.w),
+                                        child: SizedBox(
+                                          width: 162.w,
+                                          child: Text(
+                                            maxLines: 2,
+                                            snapshot.data!
+                                                .docs[position]["about"]
+                                                .toString(),
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.w),
+                                        child: SizedBox(
+                                          width: 66.w,
+                                          height: 15.h,
+                                          child: Text(
+                                            " \₹ ${snapshot.data!
+                                                .docs[position]['price']
+                                                .toString()}",
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                        EdgeInsets.only(left: 5.w, top: 5.h),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 49.w,
+                                              height: 16.h,
+                                              child: Text(
+                                                " \₹ ${snapshot.data!
+                                                    .docs[position]['offerprice']
+                                                    .toString()}",
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle: TextStyle(
+                                                    decoration:
+                                                    TextDecoration.lineThrough,
+                                                    color: Color(0xFFBBBBBB),
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 49.w,
+                                              height: 16.h,
+                                              child: Text(
+                                                '${snapshot.data!
+                                                    .docs[position]["offer"]
+                                                    .toString()} \%Off',
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle: TextStyle(
+                                                    color: Color(0xFFFE735C),
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          RatingBar.builder(
+                                            itemSize: 18.sp,
+                                            initialRating: double.parse(snapshot
+                                                .data!.docs[position]["ratting"]
+                                                .toString()),
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            ignoreGestures: true,
+                                            itemCount: 5,
+                                            itemPadding: EdgeInsets.symmetric(
+                                                horizontal: 1.w),
+                                            itemBuilder: (context, _) =>
+                                                Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                ),
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: 39.w,
+                                            height: 14.h,
+                                            child: Text(
+                                              snapshot
+                                                  .data!
+                                                  .docs[position]["ratting"]
+                                                  .toString(),
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: TextStyle(
+                                                  color: Color(0xFFA4A9B3),
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, position) {
+                        return SizedBox(width: 5.w);
+                      },
+                    ),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
             ),
-            SizedBox(height: 10.w),
+            SizedBox(height: 20.w),
             Container(
               width: 343.w,
               height: 84.h,
@@ -556,9 +698,11 @@ class _HomeState extends State<Home> {
                     child: Image.asset("assets/offerimg.png"),
                   ),
                   SizedBox(width: 20.w),
-                  Column(crossAxisAlignment: CrossAxisAlignment.center,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             'Special Offers',
@@ -582,7 +726,8 @@ class _HomeState extends State<Home> {
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                   width: 1.w,
-                                  color: Colors.black.withOpacity(0.15000000596046448),
+                                  color: Colors.black
+                                      .withOpacity(0.15000000596046448),
                                 ),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
@@ -594,10 +739,11 @@ class _HomeState extends State<Home> {
                                   spreadRadius: 0.r,
                                 )
                               ],
-                            ),child: Padding(
-                            padding:  EdgeInsets.all(3.sp),
-                            child: Image.asset("assets/offeremoj.png"),
-                          ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(3.sp),
+                              child: Image.asset("assets/offeremoj.png"),
+                            ),
                           ),
                         ],
                       ),
@@ -616,145 +762,211 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),
-
-            SizedBox(
-              width: double.infinity,
-              height: 221.h,
-              child: ListView.separated(
-                itemCount: 4,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, position) {
-                  return Padding(
-                    padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                    child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=> Productdetails()));},
-                      child: Container(
-                        width: 170.w,
-                        height: 241.h,
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6.r),),
-                        ),
-                        child: Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 170.w,
-                                  height: 120.h,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(6.r),
-                                      child: Image.asset(
-                                        "assets/startintroimg.png",
-                                        fit: BoxFit.cover,
-                                      )),
-                                ),
-                                SizedBox(height: 10.h),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.w),
-                                  child: SizedBox(
-                                    width: 162.w,
-                                    child: Text(
-                                      'Women Printed Kurta',
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w500,
-                                          height: 0.11.h,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.w),
-                                  child: SizedBox(
-                                    width: 162.w,
-                                    child: Text(
-                                      'Neque porro quisquam est qui dolorem ipsum quia',
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 5.h),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.w),
-                                  child: SizedBox(
-                                    width: 66.w,
-                                    height: 15.h,
-                                    child: Text(
-                                      '₹1500',
-                                      style: GoogleFonts.montserrat(
-                                        textStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.w,top: 5.h),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 49.w,
-                                        height: 16.h,
-                                        child: Text(
-                                          '₹2499',
-                                          style: GoogleFonts.montserrat(
-                                            textStyle: TextStyle(
-                                              decoration: TextDecoration.lineThrough,
-                                              color: Color(0xFFBBBBBB),
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 49.w,
-                                        height: 16.h,
-                                        child: Text(
-                                          '40%Off',
-                                          style: GoogleFonts.montserrat(
-                                            textStyle: TextStyle(
-                                              color: Color(0xFFFE735C),
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )),
+            SizedBox(height: 20.h),
+            StreamBuilder<QuerySnapshot>(
+                stream: specialOffer,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "ERROR",
+                        style: TextStyle(color: Colors.red),
                       ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, position) {
-                  return SizedBox(width: 5.w);
-                },
-              ),
-            ),
-
-
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      width: double.infinity,
+                      height: 221.h,
+                      child: ListView.separated(
+                        itemCount: 4,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, position) {
+                          return Padding(
+                            padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => Productdetails(image:snapshot
+                                        .data!
+                                        .docs[position]["imgUrl"]
+                                        .toString(),
+                                        productname: snapshot
+                                            .data!
+                                            .docs[position]["productName"]
+                                            .toString() ,
+                                        ratting: snapshot.data!
+                                            .docs[position]["ratting"]
+                                            .toString(),
+                                        offer:snapshot.data!
+                                            .docs[position]["offer"]
+                                            .toString() ,
+                                        offerprice:snapshot.data!
+                                            .docs[position]["offerprice"]
+                                            .toString() ,
+                                        price:snapshot.data!
+                                            .docs[position]['price']
+                                            .toString() ,
+                                        about: snapshot.data!
+                                            .docs[position]["about"]
+                                            .toString())));
+                              },
+                              child: Container(
+                                width: 170.w,
+                                height: 241.h,
+                                decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.r),
+                                  ),
+                                ),
+                                child: Container(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
+                                      children: [
+                                        SizedBox(
+                                          width: 170.w,
+                                          height: 120.h,
+                                          child: ClipRRect(
+                                              borderRadius:
+                                              BorderRadius.circular(6.r),
+                                              child: Image.network(
+                                                snapshot
+                                                    .data!
+                                                    .docs[position]["imgUrl"]
+                                                    .toString(),
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.w),
+                                          child: SizedBox(
+                                            width: 162.w,
+                                            child: Text(
+                                              snapshot.data!
+                                                  .docs[position]["productName"]
+                                                  .toString(),
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  height: 0.11.h,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.w),
+                                          child: SizedBox(
+                                            width: 162.w,
+                                            child: Text(
+                                              maxLines: 2,
+                                              snapshot.data!
+                                                  .docs[position]["about"]
+                                                  .toString(),
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 5.h),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.w),
+                                          child: SizedBox(
+                                            width: 66.w,
+                                            height: 15.h,
+                                            child: Text(
+                                              snapshot.data!
+                                                  .docs[position]["price"]
+                                                  .toString(),
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                          EdgeInsets.only(left: 5.w, top: 5.h),
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 49.w,
+                                                height: 16.h,
+                                                child: Text(
+                                                  snapshot.data!
+                                                      .docs[position]["offerprice"]
+                                                      .toString(),
+                                                  style: GoogleFonts.montserrat(
+                                                    textStyle: TextStyle(
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                      color: Color(0xFFBBBBBB),
+                                                      fontSize: 12.sp,
+                                                      fontWeight: FontWeight
+                                                          .w300,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 49.w,
+                                                height: 16.h,
+                                                child: Text(
+                                                  '${snapshot.data!
+                                                      .docs[position]["offer"]
+                                                      .toString()} \%Off',
+                                                  style: GoogleFonts.montserrat(
+                                                    textStyle: TextStyle(
+                                                      color: Color(0xFFFE735C),
+                                                      fontSize: 12.sp,
+                                                      fontWeight: FontWeight
+                                                          .w400,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, position) {
+                          return SizedBox(width: 5.w);
+                        },
+                      ),
+                    );
+                  } else {
+                    return SizedBox();
+                  }
+                }),
             SizedBox(
               height: 10.h,
             )

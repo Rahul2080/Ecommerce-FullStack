@@ -1,5 +1,7 @@
+import 'package:ecommerceapp2/authentication/Otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../Bottomnavigation.dart';
@@ -96,8 +98,8 @@ class _PhoneState extends State<Phone> {
                   color: Color(0xFFF3F3F3),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r))),
-              child: TextField(controller: phonenumbercontroller,
-                decoration: InputDecoration(
+              child: TextField(controller: phonenumbercontroller,keyboardType: TextInputType.number,
+                decoration: InputDecoration(prefix: Text("+91 "),
                   hintText: 'Enter Phone Number',
                   prefixIcon: Icon(Icons.phone),
                   border: OutlineInputBorder(
@@ -127,24 +129,53 @@ class _PhoneState extends State<Phone> {
           ),
           SizedBox(height: 50.h),
           Center(
-            child: Container(
-              width: 317.w,
-              height: 55.h,
-              decoration: ShapeDecoration(
-                color: Color(0xFFF73658),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.r)),
-              ),child: Center(
-              child: Text(
-                'Send OTP ',
-                style:GoogleFonts.montserrat(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w600,
-                  ),),
+            child: GestureDetector(onTap: (){
+              auth.verifyPhoneNumber(
+
+                  phoneNumber:"+91${phonenumbercontroller.text}",
+                  verificationCompleted: (_){},
+                  verificationFailed: (error){ Fluttertoast.showToast(
+                      msg: error.toString(),
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0.sp);},
+                  codeSent: (String verificationId,int? token){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Otp(verification: verificationId, name: namecontroller.text, email:emailcontroller.text,)));
+                  },
+                  codeAutoRetrievalTimeout: (error){ Fluttertoast.showToast(
+                      msg: error.toString(),
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0.sp);});
+
+
+
+        },
+              child: Container(
+                width: 317.w,
+                height: 55.h,
+                decoration: ShapeDecoration(
+                  color: Color(0xFFF73658),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4.r)),
+                ),child: Center(
+                child: Text(
+                  'Send OTP ',
+                  style:GoogleFonts.montserrat(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                    ),),
+                ),
               ),
-            ),
+              ),
             ),
           ),
           SizedBox(height: 15.h),

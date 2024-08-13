@@ -1,4 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:double_back_to_exit/double_back_to_exit.dart';
 import 'package:ecommerceapp2/Cart.dart';
 import 'package:ecommerceapp2/Profile_pages/Profile.dart';
 import 'package:flutter/material.dart';
@@ -20,35 +21,38 @@ class _BottomnavigationState extends State<Bottomnavigation> {
   int currentindex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        color: Colors.white,
-        animationCurve: Curves.easeInOut,
-        backgroundColor: Colors.white,
-        height: 50.h,
-        animationDuration: Duration(milliseconds: 500 ),
-        onTap: (index) {
-          setState(() {
-            currentindex = index;
-          });
-        },
-        items: [
-          Icon(Icons.home,
-              color: currentindex == 0 ? Colors.black: Colors.black),
-          Icon(Icons.favorite_border,
-              color: currentindex == 1 ? Colors.red : Colors.black),
-          Icon(Icons.shopping_cart_outlined,
-              color: currentindex == 0 ? Colors.black: Colors.black),
-          Icon(Icons.search,
-              color: currentindex == 2 ? Colors.black :Colors.black),
-          Icon(Icons.person_outlined,
-              color: currentindex == 3 ? Colors.black : Colors.black),
+    return DoubleBackToExit(
+      snackBarMessage: "Press back again to exit",
+      child: Scaffold(
+        bottomNavigationBar: CurvedNavigationBar(
+          color: Colors.white,
+          animationCurve: Curves.easeInOut,
+          backgroundColor: Colors.white,
+          height: 50.h,
+          animationDuration: Duration(milliseconds: 500 ),
+          onTap: (index) {
+            setState(() {
+              currentindex = index;
+            });
+          },
+          items: [
+            Icon(Icons.home,
+                color: currentindex == 0 ? Colors.black: Colors.black),
+            Icon(Icons.favorite_border,
+                color: currentindex == 1 ? Colors.red : Colors.black),
+            Icon(Icons.shopping_cart_outlined,
+                color: currentindex == 0 ? Colors.black: Colors.black),
+            Icon(Icons.search,
+                color: currentindex == 2 ? Colors.black :Colors.black),
+            Icon(Icons.person_outlined,
+                color: currentindex == 3 ? Colors.black : Colors.black),
 
-        ],
+          ],
+        ),
+        body: navigation[currentindex],
+
+
       ),
-      body: navigation[currentindex],
-
-
     );
   }
 }

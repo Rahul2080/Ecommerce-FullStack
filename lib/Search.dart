@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:double_back_to_exit/double_back_to_exit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -15,7 +16,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   TextEditingController searchcontroller = TextEditingController();
-
+  final products = FirebaseFirestore.instance.collection("Products").snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +61,13 @@ class _SearchState extends State<Search> {
                         suffixIcon: Icon(
                           Icons.mic,
                           color: Colors.grey,
-                        )),
+                        )),onSubmitted: (value){setState(() {
+
+                        });},
+                    onChanged: (value){setState(() {
+
+
+                    });},
                   ),
                 ),
               ),SizedBox(height:30.h),
@@ -68,181 +75,219 @@ class _SearchState extends State<Search> {
               SizedBox(
                 width: double.infinity,
                 height: 241.h,
-                child: ListView.separated(
-                  itemCount: 4,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, position) {
-                    return Padding(
-                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                      child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=> Productdetails(
-                          image:'snapshot.data!.docs[position]["imgUrl"]'.toString(),
-                          productname: 'snapshot.data!.docs[position]["productName"]'
-                              .toString() ,
-                          ratting: 'snapshot.data!.docs[position]["ratting"]'
-                              .toString(),
-                          offer:'snapshot.data!.docs[position]["offer"].toString()' ,
-                          offerprice:'snapshot.data!.docs[position]["offerprice"].toString()' ,
-                          price:"snapshot.data!.docs[position]['price']"
-                              .toString() ,
-                          about: 'snapshot.data!.docs[position]["about"]'
-                              .toString()
-                      )));},
-                        child: Container(
-                          width: 170.w,
-                          height: 241.h,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6.r)),
-                          ),
-                          child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 170.w,
-                                    height: 124.h,
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(6.r),
-                                        child: Image.asset(
-                                          "assets/startintroimg.png",
-                                          fit: BoxFit.cover,
-                                        )),
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 5.w),
-                                    child: SizedBox(
-                                      width: 162.w,
-                                      child: Text(
-                                        'Women Printed Kurta',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                            height: 0.11.h,
-                                          ),
-                                        ),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: products,
+                  builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot) {
+    if (!snapshot.hasData) {
+    return Center(
+    child: CircularProgressIndicator(),
+    );
+    }
+    if (snapshot.hasError) {
+    return Center(
+    child: Text(
+    "ERROR",
+    style: TextStyle(color: Colors.red),
+    ),
+    );
+    }
+    if (snapshot.hasData) {
+                    return ListView.separated(
+                      itemCount: snapshot.data!.docs.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, position) {
+                        if (searchcontroller.text.toLowerCase() ==
+                            snapshot.data!.docs[position]["productName"]
+                                .toString()
+                                .toLowerCase()){
+                        return Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                          child: GestureDetector(onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (_)=> Productdetails(
+                              image:snapshot.data!.docs[position]["imgUrl"].toString(),
+                              productname: snapshot.data!.docs[position]["productName"]
+                                  .toString() ,
+                              ratting: snapshot.data!.docs[position]["ratting"]
+                                  .toString(),
+                              offer:snapshot.data!.docs[position]["offer"].toString() ,
+                              offerprice:snapshot.data!.docs[position]["offerprice"].toString() ,
+                              price:snapshot.data!.docs[position]['price']
+                                  .toString() ,
+                              about: snapshot.data!.docs[position]["about"]
+                                  .toString(),
+                              id:  snapshot.data!.docs[position]["id"].toString()
+                          )));},
+                            child: Container(
+                              width: 170.w,
+                              height: 241.h,
+                              decoration: ShapeDecoration(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.r)),
+                              ),
+                              child: Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 170.w,
+                                        height: 124.h,
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(6.r),
+                                            child: Image.network(
+                                              snapshot.data!.docs[position]["imgUrl"].toString(),
+                                              fit: BoxFit.cover,
+                                            )),
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 5.w),
-                                    child: SizedBox(
-                                      width: 162.w,
-                                      child: Text(
-                                        'Neque porro quisquam est qui dolorem ipsum quia',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 10.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 5.h),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 5.w),
-                                    child: SizedBox(
-                                      width: 66.w,
-                                      height: 15.h,
-                                      child: Text(
-                                        '₹1500',
-                                        style: GoogleFonts.montserrat(
-                                          textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 5.w,top: 5.h),
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 49.w,
-                                          height: 16.h,
+                                      SizedBox(height: 10.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.w),
+                                        child: SizedBox(
+                                          width: 162.w,
                                           child: Text(
-                                            '₹2499',
+                                            snapshot.data!.docs[position]["productName"]
+                                                .toString(),
                                             style: GoogleFonts.montserrat(
                                               textStyle: TextStyle(
-                                                decoration: TextDecoration.lineThrough,
-                                                color: Color(0xFFBBBBBB),
+                                                color: Colors.black,
                                                 fontSize: 12.sp,
-                                                fontWeight: FontWeight.w300,
+                                                fontWeight: FontWeight.w500,
+                                                height: 0.11.h,
                                               ),
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 49.w,
-                                          height: 16.h,
-                                          child: Text(
-                                            '40%Off',
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.w),
+                                        child: SizedBox(
+                                          width: 162.w,
+                                          child: Text(maxLines: 2,
+                                            snapshot.data!.docs[position]["about"]
+                                                .toString(),
                                             style: GoogleFonts.montserrat(
                                               textStyle: TextStyle(
-                                                color: Color(0xFFFE735C),
-                                                fontSize: 12.sp,
+                                                color: Colors.black,
+                                                fontSize: 10.sp,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      RatingBar.builder(
-                                        itemSize: 18.sp,
-                                        initialRating: 3,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        ignoreGestures: true,
-                                        itemCount: 5,
-                                        itemPadding:
-                                        EdgeInsets.symmetric(horizontal: 1.w),
-                                        itemBuilder: (context, _) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        onRatingUpdate: (rating) {
-                                          print(rating);
-                                        },
                                       ),
-                                      SizedBox(
-                                        width: 39.w,
-                                        height: 14.h,
-                                        child: Text(
-                                          '56890',
-                                          style: GoogleFonts.montserrat(
-                                            textStyle: TextStyle(
-                                              color: Color(0xFFA4A9B3),
-                                              fontSize: 10.sp,
-                                              fontWeight: FontWeight.w400,
+                                      SizedBox(height: 5.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.w),
+                                        child: SizedBox(
+                                          width: 66.w,
+                                          height: 15.h,
+                                          child: Text(
+                                            " \₹ ${snapshot.data!
+                                                .docs[position]['price']
+                                                .toString()}",
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      )
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.w,top: 5.h),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 49.w,
+                                              height: 16.h,
+                                              child: Text(
+                                                " \₹ ${snapshot.data!
+                                                    .docs[position]['offerprice']
+                                                    .toString()}",
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle: TextStyle(
+                                                    decoration: TextDecoration.lineThrough,
+                                                    color: Color(0xFFBBBBBB),
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 49.w,
+                                              height: 16.h,
+                                              child: Text(
+                                                '${snapshot.data!
+                                                    .docs[position]["offer"]
+                                                    .toString()} \%Off',
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle: TextStyle(
+                                                    color: Color(0xFFFE735C),
+                                                    fontSize: 12.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          RatingBar.builder(
+                                            itemSize: 18.sp,
+                                            initialRating: double.parse(snapshot
+                                                .data!.docs[position]["ratting"]
+                                                .toString()),
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            ignoreGestures: true,
+                                            itemCount: 5,
+                                            itemPadding:
+                                            EdgeInsets.symmetric(horizontal: 1.w),
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
+                                          ),
+                                          SizedBox(
+                                            width: 39.w,
+                                            height: 14.h,
+                                            child: Text(
+                                                snapshot
+                                                    .data!.docs[position]["ratting"]
+                                                    .toString(),
+                                              style: GoogleFonts.montserrat(
+                                                textStyle: TextStyle(
+                                                  color: Color(0xFFA4A9B3),
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
-                                  ),
-                                ],
-                              )),
-                        ),
-                      ),
+                                  )),
+                            ),
+                          ),
+                        );}else {
+                          return SizedBox();
+                        }
+                      },
+                      separatorBuilder: (context, position) {
+                        return SizedBox(width: 5.w);
+                      },
                     );
-                  },
-                  separatorBuilder: (context, position) {
-                    return SizedBox(width: 5.w);
-                  },
+                  }else {return SizedBox();}}
                 ),
               ),
             ],

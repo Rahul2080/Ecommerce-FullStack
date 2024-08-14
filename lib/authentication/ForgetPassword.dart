@@ -113,6 +113,7 @@ class _ForgetpasswordState extends State<Forgetpassword> {
                   onTap: () {
                     final isValid = formkey.currentState?.validate();
                     if (isValid!) {
+                      print(emailcontroller.text);
                       auth
                           .sendPasswordResetEmail(email: emailcontroller.text)
                           .then((onValue) {

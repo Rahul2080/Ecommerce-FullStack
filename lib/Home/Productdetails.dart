@@ -1,12 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerceapp2/Cart.dart';
 import 'package:ecommerceapp2/Home/Purchase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:like_button/like_button.dart';
 import 'package:readmore/readmore.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../Toastmessage.dart';
 
 class Productdetails extends StatefulWidget {
   final String image;
@@ -16,6 +22,7 @@ class Productdetails extends StatefulWidget {
   final String offerprice;
   final String price;
   final String about;
+  final String id;
 
   const Productdetails(
       {super.key,
@@ -25,17 +32,44 @@ class Productdetails extends StatefulWidget {
       required this.offer,
       required this.offerprice,
       required this.price,
-      required this.about});
+      required this.about,
+      required this.id});
 
   @override
   State<Productdetails> createState() => _ProductdetailsState();
 }
 
 class _ProductdetailsState extends State<Productdetails> {
+  bool favourite = false;
   int currrentindex = 0;
+
+  Future<void> checkFavourite() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final subcollection = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(auth.currentUser!.uid)
+        .collection("favourite");
+    QuerySnapshot querySnapshot = await subcollection.get();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      if (querySnapshot.docs[i]["id"].toString() == widget.id.toString()) {
+        setState(() {
+          favourite = true;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final firestore = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(auth.currentUser!.uid.toString())
+        .collection("favourite");
+    final addtocart = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(auth.currentUser!.uid.toString())
+        .collection("Carts");
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -98,23 +132,74 @@ class _ProductdetailsState extends State<Productdetails> {
               child: AnimatedSmoothIndicator(
                 activeIndex: currrentindex,
                 count: 3,
-                effect: WormEffect(radius: 10.r, dotHeight: 10.h, dotWidth: 10.w),
+                effect:
+                    WormEffect(radius: 10.r, dotHeight: 10.h, dotWidth: 10.w),
               ),
             ),
             Padding(
               padding: EdgeInsets.only(left: 10.w),
-              child: SizedBox(
-                width: 200.w,
-                child: Text(
-                  widget.productname,
-                  style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 200.w,
+                    child: Text(
+                      widget.productname,
+                      style: GoogleFonts.montserrat(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(width: 90.w),
+                  Container(
+                    width: 50.w,
+                    height: 50.h,
+                    child: IconButton(
+                      icon: favourite == true
+                          ? Icon(
+                              Icons.favorite,
+                              size: 30.sp,
+                              color: Colors.red,
+                            )
+                          : Icon(
+                              Icons.favorite_border,
+                              size: 30.sp,
+                            ),
+                      onPressed: () {
+                        checkFavourite();
+                        if (favourite == true) {
+                          firestore.doc(widget.id).delete().then((onValue) {
+                            Fluttertoast.showToast(msg: "removed");
+                            setState(() {
+                              favourite = false;
+                            });
+                          });
+                        } else {
+                          firestore.doc(widget.id).set({
+                            "imgUrl": widget.image,
+                            "id": widget.id,
+                            "ratting": widget.ratting,
+                            "price": widget.price,
+                            "productName": widget.productname,
+                            "about": widget.about,
+                            "offerprice": widget.offerprice,
+                            "offer": widget.offer
+                          }).then((onValue) {
+                            Fluttertoast.showToast(msg: "added to Favourates");
+                            setState(() {
+                              favourite = true;
+                            });
+                          }).onError((error, stackTrace) => ToastMessage()
+                              .toastmessage(message: error.toString()));
+                        }
+                        ;
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -196,7 +281,7 @@ class _ProductdetailsState extends State<Productdetails> {
                     width: 49.w,
                     height: 16.h,
                     child: Text(
-                      '${ widget.offer} \%Off',
+                      '${widget.offer} \%Off',
                       style: GoogleFonts.montserrat(
                         textStyle: TextStyle(
                           color: Color(0xFFFE735C),
@@ -227,7 +312,8 @@ class _ProductdetailsState extends State<Productdetails> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.h),
-              child: ReadMoreText(widget.about.toString(),
+              child: ReadMoreText(
+                widget.about.toString(),
                 trimMode: TrimMode.Line,
                 trimLines: 2,
                 colorClickableText: Colors.pink,
@@ -239,27 +325,44 @@ class _ProductdetailsState extends State<Productdetails> {
             ),
             SizedBox(height: 70.h),
             Center(
-              child: Container(
-                width: 300.w,
-                height: 60.h,
-                decoration: ShapeDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(-0.00.w, -1.00.h),
-                    end: Alignment(0.w, 1.h),
-                    colors: [Color(0xFF3E92FF), Color(0xFF0B3689)],
+              child: GestureDetector(
+                onTap: () {
+                  addtocart.doc(widget.id).set({
+                    "imgUrl": widget.image,
+                    "id": widget.id,
+                    "ratting": widget.ratting,
+                    "price": widget.price,
+                    "productName": widget.productname,
+                    "about": widget.about,
+                    "offerprice": widget.offerprice,
+                    "offer": widget.offer
+                  }).then((onValue) {
+                    Fluttertoast.showToast(msg: "added to Cart");
+                  }).onError((error, stackTrace) =>
+                      ToastMessage().toastmessage(message: error.toString()));
+                },
+                child: Container(
+                  width: 300.w,
+                  height: 60.h,
+                  decoration: ShapeDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(-0.00.w, -1.00.h),
+                      end: Alignment(0.w, 1.h),
+                      colors: [Color(0xFF3E92FF), Color(0xFF0B3689)],
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'Add to Cart',
-                    style: GoogleFonts.montserrat(
-                      textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w500,
+                  child: Center(
+                    child: Text(
+                      'Add to Cart',
+                      style: GoogleFonts.montserrat(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
@@ -269,8 +372,20 @@ class _ProductdetailsState extends State<Productdetails> {
             SizedBox(height: 20.h),
             GestureDetector(
               onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Purchase()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => Purchase(
+                      image: widget.image,
+                      productname: widget.productname,
+                      price: widget.price,
+                      about: widget.about,
+                      id: widget.id,
+                      offerprice: widget.offerprice,
+                      ratting: widget.ratting,
+                      offer: widget.offer,
+                    ),
+                  ),
+                );
               },
               child: Center(
                 child: Container(

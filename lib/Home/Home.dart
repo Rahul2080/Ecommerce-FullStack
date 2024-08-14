@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:double_back_to_exit/double_back_to_exit.dart';
+import 'package:ecommerceapp2/Home/Category.dart';
 import 'package:ecommerceapp2/Profile_pages/Profile.dart';
 import 'package:ecommerceapp2/Home/Productdetails.dart';
 import 'package:ecommerceapp2/Search.dart';
@@ -247,12 +248,14 @@ class _HomeState extends State<Home> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(left: 10.w),
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(snapshot
-                                      .data!.docs[position]["imgUrl"]
-                                      .toString()),
-                                  radius: 36.r,
-                                  backgroundColor: Colors.blue,
+                                child: GestureDetector(onTap: (){ Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Category() ));},
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(snapshot
+                                        .data!.docs[position]["imgUrl"]
+                                        .toString()),
+                                    radius: 36.r,
+                                    backgroundColor: Colors.blue,
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 12.h),
@@ -491,7 +494,9 @@ class _HomeState extends State<Home> {
                                             .toString() ,
                                         about: snapshot.data!
                                             .docs[position]["about"]
-                                            .toString() ,),),);
+                                            .toString() ,
+                                          id:  snapshot.data!
+                                              .docs[position]["id"].toString()),),);
                             },
                             child: Container(
                               width: 170.w,
@@ -786,7 +791,7 @@ class _HomeState extends State<Home> {
                   if (snapshot.hasData) {
                     return SizedBox(
                       width: double.infinity,
-                      height: 221.h,
+                      height: 235.h,
                       child: ListView.separated(
                         itemCount: 4,
                         scrollDirection: Axis.horizontal,
@@ -818,7 +823,8 @@ class _HomeState extends State<Home> {
                                             .toString() ,
                                         about: snapshot.data!
                                             .docs[position]["about"]
-                                            .toString())));
+                                            .toString(), id:  snapshot.data!
+                                          .docs[position]["id"].toString(),)));
                               },
                               child: Container(
                                 width: 170.w,
@@ -895,9 +901,9 @@ class _HomeState extends State<Home> {
                                             width: 66.w,
                                             height: 15.h,
                                             child: Text(
-                                              snapshot.data!
-                                                  .docs[position]["price"]
-                                                  .toString(),
+                                              " \₹ ${snapshot.data!
+                                                  .docs[position]['price']
+                                                  .toString()}",
                                               style: GoogleFonts.montserrat(
                                                 textStyle: TextStyle(
                                                   color: Colors.black,
@@ -917,9 +923,9 @@ class _HomeState extends State<Home> {
                                                 width: 49.w,
                                                 height: 16.h,
                                                 child: Text(
-                                                  snapshot.data!
-                                                      .docs[position]["offerprice"]
-                                                      .toString(),
+                                                  " \₹ ${snapshot.data!
+                                                      .docs[position]['offerprice']
+                                                      .toString()}",
                                                   style: GoogleFonts.montserrat(
                                                     textStyle: TextStyle(
                                                       decoration: TextDecoration
@@ -951,6 +957,48 @@ class _HomeState extends State<Home> {
                                               ),
                                             ],
                                           ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            RatingBar.builder(
+                                              itemSize: 18.sp,
+                                              initialRating: double.parse(snapshot
+                                                  .data!.docs[position]["ratting"]
+                                                  .toString()),
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              allowHalfRating: true,
+                                              ignoreGestures: true,
+                                              itemCount: 5,
+                                              itemPadding: EdgeInsets.symmetric(
+                                                  horizontal: 1.w),
+                                              itemBuilder: (context, _) =>
+                                                  Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                  ),
+                                              onRatingUpdate: (rating) {
+                                                print(rating);
+                                              },
+                                            ),
+                                            SizedBox(
+                                              width: 39.w,
+                                              height: 14.h,
+                                              child: Text(
+                                                snapshot
+                                                    .data!
+                                                    .docs[position]["ratting"]
+                                                    .toString(),
+                                                style: GoogleFonts.montserrat(
+                                                  textStyle: TextStyle(
+                                                    color: Color(0xFFA4A9B3),
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ],
                                     )),

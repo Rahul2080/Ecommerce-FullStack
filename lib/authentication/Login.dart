@@ -291,7 +291,6 @@ class _LoginState extends State<Login> {
           "email": auth.currentUser!.email.toString(),
           "password": passwordcontroller.text,
           "profile": auth.currentUser!.photoURL.toString(),
-          "premium": false
         });
         Fluttertoast.showToast(msg: "Succesfully login");
         Navigator.of(context).pushAndRemoveUntil(

@@ -216,7 +216,6 @@ TextEditingController namecontroller=TextEditingController();
                         "email": emailcontroller.text,
                         "password": passwordcontroller.text,
                         "profile": "",
-                        "premium": false
                       });
                      // checkLogin();
                       Fluttertoast.showToast(msg: "Succesfully Login");
@@ -363,7 +362,6 @@ TextEditingController namecontroller=TextEditingController();
           "email": auth.currentUser!.email.toString(),
           "password": passwordcontroller.text,
           "profile": auth.currentUser!.photoURL.toString(),
-          "premium": false
         });
         Fluttertoast.showToast(msg: "Succesfully login");
         Navigator.of(context).pushAndRemoveUntil(

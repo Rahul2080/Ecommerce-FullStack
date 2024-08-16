@@ -3,6 +3,9 @@ import 'package:ecommerceapp2/OnBoard_page/Startindro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Bottomnavigation.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -14,9 +17,15 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => Startindro()), (route) => false);
+    Future.delayed(Duration(seconds: 3), () async{
+      // Obtain shared preferences.
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      if(prefs.containsKey("Token")){
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) =>Bottomnavigation()),(route)=>false);
+      }else{
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) =>Onboard()),(route) => false);
+      }
+
     });
     return Scaffold(
       body: Row(

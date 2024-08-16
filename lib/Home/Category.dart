@@ -4,8 +4,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'Productdetails.dart';
+
 class Category extends StatefulWidget {
-  const Category({super.key});
+  final List<dynamic>product;
+
+  const Category({super.key, required this.product});
 
   @override
   State<Category> createState() => _CategoryState();
@@ -15,39 +19,22 @@ class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: DynamicHeightGridView(
-        itemCount: snapshot.data!.docs.length,
+        itemCount: widget.product.length,
         crossAxisCount: 2,
         builder: (ctx, index) {
           return Padding(
             padding: EdgeInsets.only(left: 10.w, right: 10.w),
             child: GestureDetector(onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (
-                  _) =>
-                  Productdetails(image:snapshot
-                      .data!
-                      .docs[index]["imgUrl"]
-                      .toString(),
-                      productname: snapshot
-                          .data!
-                          .docs[index]["productName"]
-                          .toString() ,
-                      ratting: snapshot.data!
-                          .docs[index]["ratting"]
-                          .toString(),
-                      offer:snapshot.data!
-                          .docs[index]["offer"]
-                          .toString() ,
-                      offerprice:snapshot.data!
-                          .docs[index]["offerprice"]
-                          .toString() ,
-                      price:snapshot.data!
-                          .docs[index]['price']
-                          .toString() ,
-                      about: snapshot.data!
-                          .docs[index]["about"]
-                          .toString() ,
-                      id:  snapshot.data!
-                          .docs[index]["id"].toString())));
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) =>
+                  Productdetails(image:  widget.product[index]["imgUrl"].toString(),
+                      productname:  widget.product[index]["productName"].toString(),
+                      ratting:  widget.product[index]["ratting"].toString(),
+                      offer:  widget.product[index]["offer"].toString(),
+                      offerprice:  widget.product[index]["offerprice"].toString(),
+                      price:  widget.product[index]["price"].toString(),
+                      about:  widget.product[index]["about"].toString(),
+                      id:  widget.product[index]["id"].toString()
+                  )));
             },
               child: Container(
                 width: 170.w,
@@ -55,7 +42,7 @@ class _CategoryState extends State<Category> {
                 decoration: ShapeDecoration(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.r)),
+                      borderRadius: BorderRadius.circular(6.r),),
                 ),
                 child: Container(
                     child: Column(
@@ -68,10 +55,9 @@ class _CategoryState extends State<Category> {
                               borderRadius: BorderRadius.circular(
                                   6.r),
                               child: Image.network(
-                                snapshot.data!.docs[index]["imgUrl"]
-                                    .toString(),
+                                widget.product[index]["imgUrl"].toString(),
                                 fit: BoxFit.cover,
-                              )),
+                              ),),
                         ),
                         SizedBox(height: 10.h),
                         Padding(
@@ -79,9 +65,7 @@ class _CategoryState extends State<Category> {
                           child: SizedBox(
                             width: 162.w,
                             child: Text(
-                              snapshot.data!
-                                  .docs[index]["productName"]
-                                  .toString(),
+                              widget.product[index]["productName"].toString(),
                               style: GoogleFonts.montserrat(
                                 textStyle: TextStyle(
                                   color: Colors.black,
@@ -99,8 +83,7 @@ class _CategoryState extends State<Category> {
                           child: SizedBox(
                             width: 162.w,
                             child: Text(maxLines: 2,
-                              snapshot.data!.docs[index]["about"]
-                                  .toString(),
+                              widget.product[index]["about"].toString(),
                               style: GoogleFonts.montserrat(
                                 textStyle: TextStyle(
                                   color: Colors.black,
@@ -118,8 +101,7 @@ class _CategoryState extends State<Category> {
                             width: 66.w,
                             height: 15.h,
                             child: Text(
-                              " \₹ ${snapshot.data!
-                                  .docs[index]['price']
+                              " \₹ ${widget.product[index]['price']
                                   .toString()}",
                               style: GoogleFonts.montserrat(
                                 textStyle: TextStyle(
@@ -140,8 +122,7 @@ class _CategoryState extends State<Category> {
                                 width: 49.w,
                                 height: 16.h,
                                 child: Text(
-                                  " \₹ ${snapshot.data!
-                                      .docs[index]['offerprice']
+                                  " \₹ ${widget.product[index]['offerprice']
                                       .toString()}",
                                   style: GoogleFonts.montserrat(
                                     textStyle: TextStyle(
@@ -158,8 +139,7 @@ class _CategoryState extends State<Category> {
                                 width: 49.w,
                                 height: 16.h,
                                 child: Text(
-                                  '${snapshot.data!
-                                      .docs[index]["offer"]
+                                  '${widget.product[index]["offer"]
                                       .toString()} \%Off',
                                   style: GoogleFonts.montserrat(
                                     textStyle: TextStyle(
@@ -177,9 +157,9 @@ class _CategoryState extends State<Category> {
                           children: [
                             RatingBar.builder(
                               itemSize: 18.sp,
-                              initialRating: double.parse(snapshot
-                                  .data!.docs[index]["ratting"]
-                                  .toString()),
+                              initialRating: double.parse(
+                                  widget.product[index]["ratting"]
+                                      .toString()),
                               minRating: 1,
                               direction: Axis.horizontal,
                               allowHalfRating: true,
@@ -200,8 +180,7 @@ class _CategoryState extends State<Category> {
                               width: 39.w,
                               height: 14.h,
                               child: Text(
-                                snapshot
-                                    .data!.docs[index]["ratting"]
+                                widget.product[index]["ratting"]
                                     .toString(),
                                 style: GoogleFonts.montserrat(
                                   textStyle: TextStyle(
@@ -219,6 +198,6 @@ class _CategoryState extends State<Category> {
               ),
             ),
           );
-        }););
+        }),);
   }
 }

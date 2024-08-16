@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Bottomnavigation.dart';
 import '../Toastmessage.dart';
@@ -274,7 +275,7 @@ class _LoginState extends State<Login> {
     );
   }
   Future<String?> signInwithGoogle() async {
-   // checkLogin();
+    checkLogin();
     try {
       final GoogleSignInAccount? googleSignInAccount =
       await googleSignIn.signIn();
@@ -284,26 +285,19 @@ class _LoginState extends State<Login> {
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
-      await auth.signInWithCredential(credential).then((onValue) async {
-        await firestore.doc(auth.currentUser!.uid.toString()).set({
-          "name": auth.currentUser!.displayName.toString(),
-          "id": auth.currentUser!.uid.toString(),
-          "email": auth.currentUser!.email.toString(),
-          "password": passwordcontroller.text,
-          "profile": auth.currentUser!.photoURL.toString(),
-        });
-        Fluttertoast.showToast(msg: "Succesfully login");
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Bottomnavigation()),
-                (route) => false);
-
-      }).onError((error, stackTrace) =>
-          ToastMessage().toastmessage(message: error.toString()));
+      Fluttertoast.showToast(msg: "Succesfully login");
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Bottomnavigation()),
+              (route) => false);
 
     } on FirebaseAuthException catch (e) {
       print(e.message);
       throw e;
     }
+  }
+  void checkLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('Token', true);
   }
 
 }

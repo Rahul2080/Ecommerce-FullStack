@@ -21,13 +21,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int currrentindex = 0;
   final firestore =
-  FirebaseFirestore.instance.collection("Category").snapshots();
+      FirebaseFirestore.instance.collection("Category").snapshots();
   final AdsSlider =
-  FirebaseFirestore.instance.collection("AdsSlider").snapshots();
+      FirebaseFirestore.instance.collection("AdsSlider").snapshots();
   final dealoftheday =
-  FirebaseFirestore.instance.collection("DealsOfTheDay").snapshots();
+      FirebaseFirestore.instance.collection("DealsOfTheDay").snapshots();
   final specialOffer =
-  FirebaseFirestore.instance.collection("SpecialOffer").snapshots();
+      FirebaseFirestore.instance.collection("SpecialOffer").snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +248,12 @@ class _HomeState extends State<Home> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(left: 10.w),
-                                child: GestureDetector(onTap: (){ Navigator.of(context).push(MaterialPageRoute(builder: (_)=>Category() ));},
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (_) => Category(product: snapshot.data!.docs[position]["categoryproduct"],)));
+                                  },
                                   child: CircleAvatar(
                                     backgroundImage: NetworkImage(snapshot
                                         .data!.docs[position]["imgUrl"]
@@ -311,23 +316,23 @@ class _HomeState extends State<Home> {
                     return CarouselSlider.builder(
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (BuildContext context, int index,
-                          int pageViewIndex) =>
+                              int pageViewIndex) =>
                           Container(
-                            width: 343.w,
-                            height: 189.h,
-                            decoration: ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: Image.network(
-                                snapshot.data!.docs[index]["imgUrl"].toString(),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                        width: 343.w,
+                        height: 189.h,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: Image.network(
+                            snapshot.data!.docs[index]["imgUrl"].toString(),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                       options: CarouselOptions(
                           autoPlay: true,
                           enlargeCenterPage: true,
@@ -470,33 +475,29 @@ class _HomeState extends State<Home> {
                           padding: EdgeInsets.only(left: 10.w, right: 10.w),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) =>
-                                      Productdetails(image:snapshot
-                                          .data!
-                                          .docs[position]["imgUrl"]
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => Productdetails(
+                                      image: snapshot.data!.docs[position]["imgUrl"]
                                           .toString(),
-                                        productname: snapshot
-                                            .data!
-                                            .docs[position]["productName"]
-                                            .toString() ,
-                                        ratting: snapshot.data!
-                                            .docs[position]["ratting"]
-                                            .toString(),
-                                        offer:snapshot.data!
-                                            .docs[position]["offer"]
-                                            .toString() ,
-                                        offerprice:snapshot.data!
-                                            .docs[position]["offerprice"]
-                                            .toString() ,
-                                        price:snapshot.data!
-                                            .docs[position]['price']
-                                            .toString() ,
-                                        about: snapshot.data!
-                                            .docs[position]["about"]
-                                            .toString() ,
-                                          id:  snapshot.data!
-                                              .docs[position]["id"].toString()),),);
+                                      productname: snapshot
+                                          .data!.docs[position]["productName"]
+                                          .toString(),
+                                      ratting: snapshot
+                                          .data!.docs[position]["ratting"]
+                                          .toString(),
+                                      offer: snapshot.data!.docs[position]["offer"]
+                                          .toString(),
+                                      offerprice: snapshot
+                                          .data!.docs[position]["offerprice"]
+                                          .toString(),
+                                      price: snapshot.data!.docs[position]['price']
+                                          .toString(),
+                                      about: snapshot.data!.docs[position]["about"]
+                                          .toString(),
+                                      id: snapshot.data!.docs[position]["id"].toString()),
+                                ),
+                              );
                             },
                             child: Container(
                               width: 170.w,
@@ -508,170 +509,158 @@ class _HomeState extends State<Home> {
                               ),
                               child: Container(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      SizedBox(
-                                        width: 170.w,
-                                        height: 124.h,
-                                        child: ClipRRect(
-                                            borderRadius:
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 170.w,
+                                    height: 124.h,
+                                    child: ClipRRect(
+                                        borderRadius:
                                             BorderRadius.circular(6.r),
-                                            child: Image.network(
-                                              snapshot
-                                                  .data!
-                                                  .docs[position]["imgUrl"]
-                                                  .toString(),
-                                              fit: BoxFit.cover,
-                                            )),
+                                        child: Image.network(
+                                          snapshot
+                                              .data!.docs[position]["imgUrl"]
+                                              .toString(),
+                                          fit: BoxFit.cover,
+                                        )),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 5.w),
+                                    child: SizedBox(
+                                      width: 162.w,
+                                      child: Text(
+                                        snapshot
+                                            .data!.docs[position]["productName"]
+                                            .toString(),
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                            height: 0.11.h,
+                                          ),
+                                        ),
                                       ),
-                                      SizedBox(height: 10.h),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 5.w),
-                                        child: SizedBox(
-                                          width: 162.w,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 5.w),
+                                    child: SizedBox(
+                                      width: 162.w,
+                                      child: Text(
+                                        maxLines: 2,
+                                        snapshot.data!.docs[position]["about"]
+                                            .toString(),
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 5.w),
+                                    child: SizedBox(
+                                      width: 66.w,
+                                      height: 15.h,
+                                      child: Text(
+                                        " \₹ ${snapshot.data!.docs[position]['price'].toString()}",
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 5.w, top: 5.h),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 49.w,
+                                          height: 16.h,
                                           child: Text(
-                                            snapshot
-                                                .data!
-                                                .docs[position]["productName"]
-                                                .toString(),
+                                            " \₹ ${snapshot.data!.docs[position]['offerprice'].toString()}",
                                             style: GoogleFonts.montserrat(
                                               textStyle: TextStyle(
-                                                color: Colors.black,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                color: Color(0xFFBBBBBB),
                                                 fontSize: 12.sp,
-                                                fontWeight: FontWeight.w500,
-                                                height: 0.11.h,
+                                                fontWeight: FontWeight.w300,
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 5.w),
-                                        child: SizedBox(
-                                          width: 162.w,
+                                        SizedBox(
+                                          width: 49.w,
+                                          height: 16.h,
                                           child: Text(
-                                            maxLines: 2,
-                                            snapshot.data!
-                                                .docs[position]["about"]
-                                                .toString(),
+                                            '${snapshot.data!.docs[position]["offer"].toString()} \%Off',
                                             style: GoogleFonts.montserrat(
                                               textStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 10.sp,
+                                                color: Color(0xFFFE735C),
+                                                fontSize: 12.sp,
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
                                           ),
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      RatingBar.builder(
+                                        itemSize: 18.sp,
+                                        initialRating: double.parse(snapshot
+                                            .data!.docs[position]["ratting"]
+                                            .toString()),
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        ignoreGestures: true,
+                                        itemCount: 5,
+                                        itemPadding: EdgeInsets.symmetric(
+                                            horizontal: 1.w),
+                                        itemBuilder: (context, _) => Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        onRatingUpdate: (rating) {
+                                          print(rating);
+                                        },
                                       ),
-                                      SizedBox(height: 5.h),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 5.w),
-                                        child: SizedBox(
-                                          width: 66.w,
-                                          height: 15.h,
-                                          child: Text(
-                                            " \₹ ${snapshot.data!
-                                                .docs[position]['price']
-                                                .toString()}",
-                                            style: GoogleFonts.montserrat(
-                                              textStyle: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 12.sp,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                      SizedBox(
+                                        width: 39.w,
+                                        height: 14.h,
+                                        child: Text(
+                                          snapshot
+                                              .data!.docs[position]["ratting"]
+                                              .toString(),
+                                          style: GoogleFonts.montserrat(
+                                            textStyle: TextStyle(
+                                              color: Color(0xFFA4A9B3),
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                        EdgeInsets.only(left: 5.w, top: 5.h),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 49.w,
-                                              height: 16.h,
-                                              child: Text(
-                                                " \₹ ${snapshot.data!
-                                                    .docs[position]['offerprice']
-                                                    .toString()}",
-                                                style: GoogleFonts.montserrat(
-                                                  textStyle: TextStyle(
-                                                    decoration:
-                                                    TextDecoration.lineThrough,
-                                                    color: Color(0xFFBBBBBB),
-                                                    fontSize: 12.sp,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 49.w,
-                                              height: 16.h,
-                                              child: Text(
-                                                '${snapshot.data!
-                                                    .docs[position]["offer"]
-                                                    .toString()} \%Off',
-                                                style: GoogleFonts.montserrat(
-                                                  textStyle: TextStyle(
-                                                    color: Color(0xFFFE735C),
-                                                    fontSize: 12.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          RatingBar.builder(
-                                            itemSize: 18.sp,
-                                            initialRating: double.parse(snapshot
-                                                .data!.docs[position]["ratting"]
-                                                .toString()),
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            ignoreGestures: true,
-                                            itemCount: 5,
-                                            itemPadding: EdgeInsets.symmetric(
-                                                horizontal: 1.w),
-                                            itemBuilder: (context, _) =>
-                                                Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                ),
-                                            onRatingUpdate: (rating) {
-                                              print(rating);
-                                            },
-                                          ),
-                                          SizedBox(
-                                            width: 39.w,
-                                            height: 14.h,
-                                            child: Text(
-                                              snapshot
-                                                  .data!
-                                                  .docs[position]["ratting"]
-                                                  .toString(),
-                                              style: GoogleFonts.montserrat(
-                                                textStyle: TextStyle(
-                                                  color: Color(0xFFA4A9B3),
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                      )
                                     ],
-                                  )),
+                                  ),
+                                ],
+                              )),
                             ),
                           ),
                         );
@@ -801,30 +790,32 @@ class _HomeState extends State<Home> {
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => Productdetails(image:snapshot
-                                        .data!
-                                        .docs[position]["imgUrl"]
-                                        .toString(),
-                                        productname: snapshot
-                                            .data!
-                                            .docs[position]["productName"]
-                                            .toString() ,
-                                        ratting: snapshot.data!
-                                            .docs[position]["ratting"]
-                                            .toString(),
-                                        offer:snapshot.data!
-                                            .docs[position]["offer"]
-                                            .toString() ,
-                                        offerprice:snapshot.data!
-                                            .docs[position]["offerprice"]
-                                            .toString() ,
-                                        price:snapshot.data!
-                                            .docs[position]['price']
-                                            .toString() ,
-                                        about: snapshot.data!
-                                            .docs[position]["about"]
-                                            .toString(), id:  snapshot.data!
-                                          .docs[position]["id"].toString(),)));
+                                    builder: (_) => Productdetails(
+                                          image: snapshot
+                                              .data!.docs[position]["imgUrl"]
+                                              .toString(),
+                                          productname: snapshot.data!
+                                              .docs[position]["productName"]
+                                              .toString(),
+                                          ratting: snapshot
+                                              .data!.docs[position]["ratting"]
+                                              .toString(),
+                                          offer: snapshot
+                                              .data!.docs[position]["offer"]
+                                              .toString(),
+                                          offerprice: snapshot.data!
+                                              .docs[position]["offerprice"]
+                                              .toString(),
+                                          price: snapshot
+                                              .data!.docs[position]['price']
+                                              .toString(),
+                                          about: snapshot
+                                              .data!.docs[position]["about"]
+                                              .toString(),
+                                          id: snapshot
+                                              .data!.docs[position]["id"]
+                                              .toString(),
+                                        )));
                               },
                               child: Container(
                                 width: 170.w,
@@ -837,171 +828,158 @@ class _HomeState extends State<Home> {
                                 ),
                                 child: Container(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        SizedBox(
-                                          width: 170.w,
-                                          height: 120.h,
-                                          child: ClipRRect(
-                                              borderRadius:
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 170.w,
+                                      height: 120.h,
+                                      child: ClipRRect(
+                                          borderRadius:
                                               BorderRadius.circular(6.r),
-                                              child: Image.network(
-                                                snapshot
-                                                    .data!
-                                                    .docs[position]["imgUrl"]
-                                                    .toString(),
-                                                fit: BoxFit.cover,
-                                              )),
+                                          child: Image.network(
+                                            snapshot
+                                                .data!.docs[position]["imgUrl"]
+                                                .toString(),
+                                            fit: BoxFit.cover,
+                                          )),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 5.w),
+                                      child: SizedBox(
+                                        width: 162.w,
+                                        child: Text(
+                                          snapshot.data!
+                                              .docs[position]["productName"]
+                                              .toString(),
+                                          style: GoogleFonts.montserrat(
+                                            textStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w500,
+                                              height: 0.11.h,
+                                            ),
+                                          ),
                                         ),
-                                        SizedBox(height: 10.h),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 5.w),
-                                          child: SizedBox(
-                                            width: 162.w,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 5.w),
+                                      child: SizedBox(
+                                        width: 162.w,
+                                        child: Text(
+                                          maxLines: 2,
+                                          snapshot.data!.docs[position]["about"]
+                                              .toString(),
+                                          style: GoogleFonts.montserrat(
+                                            textStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5.h),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 5.w),
+                                      child: SizedBox(
+                                        width: 66.w,
+                                        height: 15.h,
+                                        child: Text(
+                                          " \₹ ${snapshot.data!.docs[position]['price'].toString()}",
+                                          style: GoogleFonts.montserrat(
+                                            textStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 5.w, top: 5.h),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 49.w,
+                                            height: 16.h,
                                             child: Text(
-                                              snapshot.data!
-                                                  .docs[position]["productName"]
-                                                  .toString(),
+                                              " \₹ ${snapshot.data!.docs[position]['offerprice'].toString()}",
                                               style: GoogleFonts.montserrat(
                                                 textStyle: TextStyle(
-                                                  color: Colors.black,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  color: Color(0xFFBBBBBB),
                                                   fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 0.11.h,
+                                                  fontWeight: FontWeight.w300,
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 5.w),
-                                          child: SizedBox(
-                                            width: 162.w,
+                                          SizedBox(
+                                            width: 49.w,
+                                            height: 16.h,
                                             child: Text(
-                                              maxLines: 2,
-                                              snapshot.data!
-                                                  .docs[position]["about"]
-                                                  .toString(),
+                                              '${snapshot.data!.docs[position]["offer"].toString()} \%Off',
                                               style: GoogleFonts.montserrat(
                                                 textStyle: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10.sp,
+                                                  color: Color(0xFFFE735C),
+                                                  fontSize: 12.sp,
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        RatingBar.builder(
+                                          itemSize: 18.sp,
+                                          initialRating: double.parse(snapshot
+                                              .data!.docs[position]["ratting"]
+                                              .toString()),
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          ignoreGestures: true,
+                                          itemCount: 5,
+                                          itemPadding: EdgeInsets.symmetric(
+                                              horizontal: 1.w),
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
                                         ),
-                                        SizedBox(height: 5.h),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 5.w),
-                                          child: SizedBox(
-                                            width: 66.w,
-                                            height: 15.h,
-                                            child: Text(
-                                              " \₹ ${snapshot.data!
-                                                  .docs[position]['price']
-                                                  .toString()}",
-                                              style: GoogleFonts.montserrat(
-                                                textStyle: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
+                                        SizedBox(
+                                          width: 39.w,
+                                          height: 14.h,
+                                          child: Text(
+                                            snapshot
+                                                .data!.docs[position]["ratting"]
+                                                .toString(),
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: TextStyle(
+                                                color: Color(0xFFA4A9B3),
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.w400,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                          EdgeInsets.only(left: 5.w, top: 5.h),
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 49.w,
-                                                height: 16.h,
-                                                child: Text(
-                                                  " \₹ ${snapshot.data!
-                                                      .docs[position]['offerprice']
-                                                      .toString()}",
-                                                  style: GoogleFonts.montserrat(
-                                                    textStyle: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                      color: Color(0xFFBBBBBB),
-                                                      fontSize: 12.sp,
-                                                      fontWeight: FontWeight
-                                                          .w300,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 49.w,
-                                                height: 16.h,
-                                                child: Text(
-                                                  '${snapshot.data!
-                                                      .docs[position]["offer"]
-                                                      .toString()} \%Off',
-                                                  style: GoogleFonts.montserrat(
-                                                    textStyle: TextStyle(
-                                                      color: Color(0xFFFE735C),
-                                                      fontSize: 12.sp,
-                                                      fontWeight: FontWeight
-                                                          .w400,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            RatingBar.builder(
-                                              itemSize: 18.sp,
-                                              initialRating: double.parse(snapshot
-                                                  .data!.docs[position]["ratting"]
-                                                  .toString()),
-                                              minRating: 1,
-                                              direction: Axis.horizontal,
-                                              allowHalfRating: true,
-                                              ignoreGestures: true,
-                                              itemCount: 5,
-                                              itemPadding: EdgeInsets.symmetric(
-                                                  horizontal: 1.w),
-                                              itemBuilder: (context, _) =>
-                                                  Icon(
-                                                    Icons.star,
-                                                    color: Colors.amber,
-                                                  ),
-                                              onRatingUpdate: (rating) {
-                                                print(rating);
-                                              },
-                                            ),
-                                            SizedBox(
-                                              width: 39.w,
-                                              height: 14.h,
-                                              child: Text(
-                                                snapshot
-                                                    .data!
-                                                    .docs[position]["ratting"]
-                                                    .toString(),
-                                                style: GoogleFonts.montserrat(
-                                                  textStyle: TextStyle(
-                                                    color: Color(0xFFA4A9B3),
-                                                    fontSize: 10.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                        )
                                       ],
-                                    )),
+                                    ),
+                                  ],
+                                )),
                               ),
                             ),
                           );

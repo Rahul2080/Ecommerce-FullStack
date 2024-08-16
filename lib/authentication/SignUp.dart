@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Home/Home.dart';
 import '../Toastmessage.dart';
@@ -345,7 +346,7 @@ TextEditingController namecontroller=TextEditingController();
     );
   }
   Future<String?> signInwithGoogle() async {
-    // checkLogin();
+     checkLogin();
     try {
       final GoogleSignInAccount? googleSignInAccount =
       await googleSignIn.signIn();
@@ -375,5 +376,9 @@ TextEditingController namecontroller=TextEditingController();
       print(e.message);
       throw e;
     }
+  }
+  void checkLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('Token', true);
   }
 }

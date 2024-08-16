@@ -4,6 +4,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Bottomnavigation.dart';
 import '../Toastmessage.dart';
@@ -50,7 +51,7 @@ class _OtpState extends State<Otp> {
               final credentials = PhoneAuthProvider.credential(
                   verificationId: widget.verification,
                   smsCode: verificationCode);
-              // checkLogin();
+               checkLogin();
               try {
                 await auth.signInWithCredential(credentials).then((onValue) {
                   firestore.doc(auth.currentUser!.uid.toString()).set({
@@ -87,5 +88,9 @@ class _OtpState extends State<Otp> {
         ],
       ),
     );
+  }
+  void checkLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('Token', true);
   }
 }

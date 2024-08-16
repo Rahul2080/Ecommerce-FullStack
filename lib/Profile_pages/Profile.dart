@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Toastmessage.dart';
 
@@ -404,7 +405,10 @@ class _ProfileState extends State<Profile> {
                 SizedBox(height: 40.h),
                 Center(
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async{
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.clear();
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (_) => Login()),
                           (route) => (false));

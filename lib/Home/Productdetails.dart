@@ -392,11 +392,11 @@ class _ProductdetailsState extends State<Productdetails> {
                   width: 300.w,
                   height: 60.h,
                   decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment(-0.00.w, -1.00.h),
-                      end: Alignment(0.w, 1.h),
-                      colors: [Color(0xFF3E92FF), Color(0xFF0B3689)],
-                    ),
+                      gradient: LinearGradient(
+                        begin: Alignment(0.00, -1.00),
+                        end: Alignment(0, 1),
+                        colors: [Color(0xFF70F8A8), Color(0xFF31B669)],
+                      ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),

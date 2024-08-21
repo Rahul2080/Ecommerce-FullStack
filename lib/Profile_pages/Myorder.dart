@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerceapp2/Home/Productdetails.dart';
+import 'package:ecommerceapp2/Profile_pages/Order_track.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -14,12 +15,13 @@ class Myorder extends StatefulWidget {
 }
 
 FirebaseAuth auth = FirebaseAuth.instance;
-final orders = FirebaseFirestore.instance.collection("Users").doc(
-    auth.currentUser!.uid.toString())
-    .collection("orders").snapshots();
+final orders = FirebaseFirestore.instance
+    .collection("Users")
+    .doc(auth.currentUser!.uid.toString())
+    .collection("orders")
+    .snapshots();
 
 class _MyorderState extends State<Myorder> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,35 +53,14 @@ class _MyorderState extends State<Myorder> {
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, position) {
                         return Center(
-                          child: GestureDetector(onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) =>
-                                    Productdetails(image:snapshot
-                                        .data!
-                                        .docs[position]["imgUrl"]
-                                        .toString(),
-                                        productname: snapshot
-                                            .data!
-                                            .docs[position]["productName"]
-                                            .toString() ,
-                                        ratting: snapshot.data!
-                                            .docs[position]["ratting"]
-                                            .toString(),
-                                        offer:snapshot.data!
-                                            .docs[position]["offer"]
-                                            .toString() ,
-                                        offerprice:snapshot.data!
-                                            .docs[position]["offerprice"]
-                                            .toString() ,
-                                        price:snapshot.data!
-                                            .docs[position]['price']
-                                            .toString() ,
-                                        about: snapshot.data!
-                                            .docs[position]["about"]
-                                            .toString() ,
-                                        id:  snapshot.data!
-                                            .docs[position]["id"].toString())));
-                          },
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => OrderTrack(status: snapshot.data!
+                                      .docs[position]["status"]
+                                      .toString()
+                                  )));
+                            },
                             child: Container(
                               width: 331.w,
                               height: 171.h,
@@ -106,30 +87,55 @@ class _MyorderState extends State<Myorder> {
                                 children: [
                                   Row(
                                     children: [
-                                      Container(
-                                        width: 128.14.w,
-                                        height: 125.93.h,
-                                        decoration: ShapeDecoration(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                4.r),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (_) => Productdetails(
+                                                  image: snapshot.data!
+                                                      .docs[position]["imgUrl"]
+                                                      .toString(),
+                                                  productname: snapshot
+                                                      .data!
+                                                      .docs[position]
+                                                          ["productName"]
+                                                      .toString(),
+                                                  ratting: snapshot.data!
+                                                      .docs[position]["ratting"]
+                                                      .toString(),
+                                                  offer: snapshot.data!
+                                                      .docs[position]["offer"]
+                                                      .toString(),
+                                                  offerprice:
+                                                      snapshot.data!.docs[position]["offerprice"].toString(),
+                                                  price: snapshot.data!.docs[position]['price'].toString(),
+                                                  about: snapshot.data!.docs[position]["about"].toString(),
+                                                  id: snapshot.data!.docs[position]["id"].toString())));
+                                        },
+                                        child: Container(
+                                          width: 128.14.w,
+                                          height: 125.93.h,
+                                          decoration: ShapeDecoration(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4.r),
+                                            ),
                                           ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                              4.r),
-                                          child: Image.network(
-                                            snapshot.data!
-                                                .docs[position]["imgUrl"]
-                                                .toString(),
-                                            fit: BoxFit.cover,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(4.r),
+                                            child: Image.network(
+                                              snapshot.data!
+                                                  .docs[position]["imgUrl"]
+                                                  .toString(),
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                       ),
                                       SizedBox(width: 5.w),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             width: 188.w,
@@ -170,8 +176,8 @@ class _MyorderState extends State<Myorder> {
                                                       color: Colors.black,
                                                       fontSize: 14.sp,
                                                       fontFamily: 'Montserrat',
-                                                      fontWeight: FontWeight
-                                                          .w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                       letterSpacing: -1.10.w,
                                                     ),
                                                   ),
@@ -186,16 +192,15 @@ class _MyorderState extends State<Myorder> {
                                                 width: 28.w,
                                                 height: 16.h,
                                                 child: Text(
-                                                  snapshot
-                                                      .data!
+                                                  snapshot.data!
                                                       .docs[position]["ratting"]
                                                       .toString(),
                                                   style: GoogleFonts.montserrat(
                                                     textStyle: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 12.sp,
-                                                      fontWeight: FontWeight
-                                                          .w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                     ),
                                                   ),
                                                 ),
@@ -205,7 +210,8 @@ class _MyorderState extends State<Myorder> {
                                                 initialRating: double.parse(
                                                     snapshot
                                                         .data!
-                                                        .docs[position]["ratting"]
+                                                        .docs[position]
+                                                            ["ratting"]
                                                         .toString()),
                                                 minRating: 1,
                                                 direction: Axis.horizontal,
@@ -213,13 +219,13 @@ class _MyorderState extends State<Myorder> {
                                                 ignoreGestures: true,
                                                 itemCount: 5,
                                                 itemPadding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal: 1.w),
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 1.w),
                                                 itemBuilder: (context, _) =>
                                                     Icon(
-                                                      Icons.star,
-                                                      color: Colors.amber,
-                                                    ),
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                ),
                                                 onRatingUpdate: (rating) {
                                                   print(rating);
                                                 },
@@ -236,27 +242,26 @@ class _MyorderState extends State<Myorder> {
                                                   shape: RoundedRectangleBorder(
                                                     side: BorderSide(
                                                         width: 0.30.w,
-                                                        color: Color(
-                                                            0xFFCACACA)),
+                                                        color:
+                                                            Color(0xFFCACACA)),
                                                     borderRadius:
-                                                    BorderRadius.circular(4.r),
+                                                        BorderRadius.circular(
+                                                            4.r),
                                                   ),
                                                 ),
                                                 child: SizedBox(
                                                   width: 64.w,
                                                   height: 12.h,
                                                   child: Text(
-                                                    " \₹ ${snapshot.data!
-                                                        .docs[position]['price']
-                                                        .toString()}",
+                                                    " \₹ ${snapshot.data!.docs[position]['price'].toString()}",
                                                     textAlign: TextAlign.center,
-                                                    style: GoogleFonts
-                                                        .montserrat(
+                                                    style:
+                                                        GoogleFonts.montserrat(
                                                       textStyle: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16.sp,
-                                                        fontWeight: FontWeight
-                                                            .w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
                                                     ),
                                                   ),
@@ -269,34 +274,30 @@ class _MyorderState extends State<Myorder> {
                                                     width: 53.w,
                                                     height: 12.h,
                                                     child: Text(
-                                                      '${snapshot.data!
-                                                          .docs[position]["offer"]
-                                                          .toString()} \%Off',
+                                                      '${snapshot.data!.docs[position]["offer"].toString()} \%Off',
                                                       style: GoogleFonts
                                                           .montserrat(
                                                         textStyle: TextStyle(
-                                                          color: Color(
-                                                              0xFFEA3030),
+                                                          color:
+                                                              Color(0xFFEA3030),
                                                           fontSize: 8.sp,
-                                                          fontWeight: FontWeight
-                                                              .w500,
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
                                                       ),
                                                     ),
                                                   ),
                                                   Text(
-                                                    " \₹ ${snapshot.data!
-                                                        .docs[position]['offerprice']
-                                                        .toString()}",
+                                                    " \₹ ${snapshot.data!.docs[position]['offerprice'].toString()}",
                                                     textAlign: TextAlign.center,
-                                                    style: GoogleFonts
-                                                        .montserrat(
+                                                    style:
+                                                        GoogleFonts.montserrat(
                                                       textStyle: TextStyle(
-                                                        color: Color(
-                                                            0xFFA6A6A6),
+                                                        color:
+                                                            Color(0xFFA6A6A6),
                                                         fontSize: 12.sp,
-                                                        fontWeight: FontWeight
-                                                            .w500,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                   ),
@@ -309,13 +310,13 @@ class _MyorderState extends State<Myorder> {
                                     ],
                                   ),
                                   Divider(),
-
-
                                   Padding(
                                     padding: EdgeInsets.only(left: 10.w),
                                     child: Row(
                                       children: [
-                                        Container(width: 150.w, height: 20.h,
+                                        Container(
+                                          width: 150.w,
+                                          height: 20.h,
                                           child: Text(
                                             'Total Order (1)   :  ',
                                             style: GoogleFonts.montserrat(
@@ -324,13 +325,17 @@ class _MyorderState extends State<Myorder> {
                                                 fontSize: 12.sp,
                                                 fontWeight: FontWeight.w500,
                                               ),
-                                            ),),
-                                        ), SizedBox(width: 60.w,),
-                                        Container(width: 100.w, height: 20.h,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 60.w,
+                                        ),
+                                        Container(
+                                          width: 100.w,
+                                          height: 20.h,
                                           child: Text(
-                                            " \₹ ${snapshot.data!
-                                                .docs[position]['price']
-                                                .toString()}",
+                                            " \₹ ${snapshot.data!.docs[position]['price'].toString()}",
                                             textAlign: TextAlign.right,
                                             style: GoogleFonts.montserrat(
                                               textStyle: TextStyle(
@@ -338,13 +343,12 @@ class _MyorderState extends State<Myorder> {
                                                 fontSize: 12.sp,
                                                 fontWeight: FontWeight.w600,
                                               ),
-                                            ),),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
-
-
                                 ],
                               ),
                             ),
@@ -358,8 +362,7 @@ class _MyorderState extends State<Myorder> {
                   } else {
                     return SizedBox();
                   }
-                }
-            ),
+                }),
           ),
         ],
       ),

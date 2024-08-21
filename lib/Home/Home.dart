@@ -424,7 +424,7 @@ class _HomeState extends State<Home> {
                       children: [
                         Icon(
                           Icons.alarm,
-                          size: 17.sp,
+                          size: 16.sp,
                           color: Colors.white,
                         ),
                         SizedBox(width: 5.w),

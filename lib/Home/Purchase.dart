@@ -62,7 +62,8 @@ class _PurchaseState extends State<Purchase> {
       "productName": widget.productname,
       "about": widget.about,
       "offerprice": widget.offerprice,
-      "offer": widget.offer
+      "offer": widget.offer,
+      "status": "order placed",
     }).then((onValue) {
       Navigator.of(context).pop();
       Fluttertoast.showToast(msg: "Order succesfully");

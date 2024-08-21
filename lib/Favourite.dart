@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:double_back_to_exit/double_back_to_exit.dart';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:ecommerceapp2/Home/Productdetails.dart';
 import 'package:firebase_auth/firebase_auth.dart';

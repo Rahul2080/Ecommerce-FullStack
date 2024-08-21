@@ -139,7 +139,7 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         child: ClipRRect(borderRadius: BorderRadius.circular(100.r),
-                            child: Image.network(snapshot.data!.docs[index]["profile"].toString(),fit: BoxFit.cover,)),
+                            child: Image.network(snapshot.data!.docs[index]["profile"].toString(),fit: BoxFit.cover,),),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 70.w, top: 60.h),

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 import 'Cart.dart';
 import 'Home/Productdetails.dart';
@@ -19,6 +21,52 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   TextEditingController searchcontroller = TextEditingController();
   final products = FirebaseFirestore.instance.collection("Products").snapshots();
+
+  SpeechToText _speechToText=SpeechToText();
+  bool _speechEnabled=false;
+
+
+  //speech to text package
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  /// This is the callback that the SpeechToText plugin calls when
+  /// the platform returns recognized words.
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      searchcontroller.text = result.recognizedWords;
+    });
+  }
+  //speech to text package
+  int index=0;
+  final firestore = FirebaseFirestore.instance.collection("ALL").snapshots();
+  TextEditingController search = TextEditingController();
+  @override
+  void initState() {
+    _initSpeech();
+    // TODO: implement initState
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +108,12 @@ class _SearchState extends State<Search> {
                           Icons.search,
                           color: Colors.grey,
                         ),
-                        suffixIcon: Icon(
-                          Icons.mic,
-                          color: Colors.grey,
+                        suffixIcon: GestureDetector(onTap:_speechToText.isNotListening?_startListening:_stopListening,
+                          child: Icon(
+                            _speechToText.isNotListening ? Icons.mic_off:
+                            Icons.keyboard_voice_rounded,
+                            color: Color(0xFFBBBBBB),
+                          ),
                         )),
                     onChanged: (String value){
                       setState(() {
